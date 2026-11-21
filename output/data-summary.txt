@@ -1,0 +1,177 @@
+======================================================================
+  EXTRACTION OF GENERAL FEATURES FROM BIOREACTION DATA
+  Project 1 – DTB (Digital Twin of a Bioreactor)
+======================================================================
+======================================================================
+1. BASIC INFORMATION
+======================================================================
+
+── bioreaction_remaining.csv ──
+  Shape:        2858 rows × 12 columns
+  Columns:      ['batch_id', 'elapsed_time', 'vcd', 'tcd', 'substrate', 'byproduct', 'feed_substrate', 'feed_b', 'feed_c', 'feed_d', 'volume', 'to_predict']
+  Memory usage: 267.7 KB
+
+── bioreaction_template.csv ──
+  Shape:        156 rows × 6 columns
+  Columns:      ['batch_id', 'elapsed_time', 'vcd', 'tcd', 'substrate', 'byproduct']
+  Memory usage: 8.5 KB
+
+======================================================================
+2. COLUMN DESCRIPTION & STATISTICS
+======================================================================
+
+  batch_id  ─  Batch identifier (string)
+    Unique batches in remaining:   61
+    Unique batches in template:    12
+    Template batches (subset):     ['Batch12', 'Batch24', 'Batch32', 'Batch35', 'Batch40', 'Batch48', 'Batch5', 'Batch54', 'Batch56', 'Batch57', 'Batch6', 'Batch60']
+
+  elapsed_time  ─  Time since start of batch [hours]
+    Range (remaining):  0.0000 – 13.0007
+    Range (template):   0.8951 – 12.9979
+    Typical step ~1 h; each batch ends around 13 h total.
+
+  vcd  ─  Viable Cell Density  [×10⁶ cells/mL ?]
+    Range (non-null):   0.8550 – 39.3817
+    Null count:         2160 / 2858
+
+  tcd  ─  Total Cell Density  [×10⁶ cells/mL ?]
+    Range (non-null):   0.8642 – 40.1059
+    Null count:         2160 / 2858
+    Note: tcd ≥ vcd always (tcd includes dead cells).
+
+  substrate  ─  Substrate concentration (e.g. glucose) [g/L ?]
+    Range (non-null):   0.3140 – 4.9931
+    Null count:         2160 / 2858
+    Typical trend: starts ~4.5-4.9, declines toward ~0.3-1.6 by end.
+
+  byproduct  ─  Byproduct concentration (e.g. lactate) [g/L ?]
+    Range (non-null):   0.2310 – 3.0302
+    Null count:         2160 / 2858
+
+  feed_substrate  ─  Feed rate / amount of SUBSTRATE component
+    Non-null values:    132 / 2858
+    Range:              0.050117 – 0.099265
+    Note: Only recorded at specific time points (feeding events).
+
+  feed_b  ─  Feed rate / amount of B component
+    Non-null values:    732 / 2858
+    Range:              0.042437 – 0.969634
+    Note: Only recorded at specific time points (feeding events).
+
+  feed_c  ─  Feed rate / amount of C component
+    Non-null values:    957 / 2858
+    Range:              0.000768 – 0.001991
+    Note: Only recorded at specific time points (feeding events).
+
+  feed_d  ─  Feed rate / amount of D component
+    Non-null values:    183 / 2858
+    Range:              0.010328 – 0.017477
+    Note: Only recorded at specific time points (feeding events).
+
+  volume  ─  Reactor working volume [L]
+    Range (non-null):   10.2814 – 17.1964
+    Null count:         2004 / 2858
+    Trend: increases over time due to feeding.
+
+  to_predict  ─  Boolean flag: should this row be predicted?
+    False:  2702
+    True:  156
+    Note: TRUE rows = template rows where vcd/tcd/substrate/byproduct are 0.
+    These are the rows that must be predicted for the leaderboard.
+
+======================================================================
+3. ROWS PER BATCH
+======================================================================
+  Total batches:              61
+  Min rows in a batch:        42
+  Max rows in a batch:        66
+  Mean rows per batch:        46.9
+  Median rows per batch:      46
+
+======================================================================
+4. DATA RECORDING PATTERN
+======================================================================
+
+  Each row represents ONE measurement at a specific time. NOT every quantity is measured at every time point!
+
+  ┌──────────────────────────────────────────────────────────────────┐
+  │  ~hourly (0, 1, 2, 3, ... 13):   vcd, tcd, substrate, byproduct │
+  │  at feeding times:                feed_substrate, feed_b,        │
+  │                                   feed_c, feed_d                 │
+  │  at other times:                  volume                         │
+  └──────────────────────────────────────────────────────────────────┘
+
+  The CSV is SPARSE: most cells are NaN because only a subset of
+  measurements is taken at each time point. This is typical of
+  industrial bio-process data.
+
+  Example from Batch1 (first few rows):
+
+ elapsed_time       vcd       tcd  substrate  byproduct  feed_substrate   feed_b   feed_c  feed_d    volume
+         0.00  0.979690  0.985251   4.507188   0.241840             NaN      NaN      NaN     NaN 10.500750
+         1.00  1.909271  1.929805   3.830345   0.940785             NaN      NaN      NaN     NaN 10.494285
+         1.01       NaN       NaN        NaN        NaN             NaN 0.062214      NaN     NaN       NaN
+         1.98  4.574543  4.611517   2.827742   1.860896             NaN      NaN      NaN     NaN 10.537027
+         2.04       NaN       NaN        NaN        NaN             NaN 0.136099      NaN     NaN       NaN
+         2.72       NaN       NaN        NaN        NaN             NaN      NaN 0.000854     NaN       NaN
+         2.97  7.489739  7.545903   2.362482   1.941632             NaN      NaN      NaN     NaN 10.695897
+         2.98       NaN       NaN        NaN        NaN             NaN 0.271894      NaN     NaN       NaN
+         3.50       NaN       NaN        NaN        NaN             NaN      NaN 0.000863     NaN       NaN
+         3.97 14.300371 14.405872   2.263021   2.301048             NaN      NaN      NaN     NaN 10.946566
+         3.99       NaN       NaN        NaN        NaN             NaN 0.493956      NaN     NaN       NaN
+         4.04       NaN       NaN        NaN        NaN             NaN      NaN 0.000855     NaN       NaN
+
+======================================================================
+5. PREDICTION TASK
+======================================================================
+
+  The template file (bioreaction_template.csv) contains 156 rows
+  for specific (batch_id, elapsed_time) combinations.
+
+  In the remaining file, these exact rows have:
+    - vcd, tcd, substrate, byproduct  = NaN  (to be predicted)
+    - feed_substrate, feed_b, feed_c, feed_d, volume = measured (given)
+
+  The task is to predict the FOUR target variables:
+    - vcd       (Viable Cell Density)
+    - tcd       (Total Cell Density)
+    - substrate (Substrate concentration)
+    - byproduct (Byproduct concentration)
+
+  Evaluation: Mean Absolute Percentage Error (MAPE) per target,
+  then averaged into a single "mean_mape" score.
+
+  Example template rows (what must be predicted):
+
+batch_id  elapsed_time  vcd  tcd  substrate  byproduct
+  Batch5      0.965972    0    0          0          0
+  Batch5      1.948611    0    0          0          0
+  Batch5      2.940278    0    0          0          0
+  Batch5      3.919444    0    0          0          0
+  Batch5      4.924306    0    0          0          0
+  Batch5      5.916667    0    0          0          0
+
+  Template batches (those with to_predict=True rows):
+    ['Batch12', 'Batch24', 'Batch32', 'Batch35', 'Batch40', 'Batch48', 'Batch5', 'Batch54', 'Batch56', 'Batch57', 'Batch6', 'Batch60']
+
+  Remaining batches (complete measurement data for training):
+    All other batches not in the template set.
+
+======================================================================
+6. MISSING DATA SUMMARY
+======================================================================
+
+  Column                # Present    % Present                  Role
+  ----------------------------------------------------------------------
+  batch_id                   2858       100.0%                   key
+  elapsed_time               2858       100.0%                   key
+  vcd                         698        24.4%                target
+  tcd                         698        24.4%                target
+  substrate                   698        24.4%                target
+  byproduct                   698        24.4%                target
+  feed_substrate              132         4.6%             predictor
+  feed_b                      732        25.6%             predictor
+  feed_c                      957        33.5%             predictor
+  feed_d                      183         6.4%             predictor
+  volume                      854        29.9%             predictor
+  to_predict                 2858       100.0%                  flag
