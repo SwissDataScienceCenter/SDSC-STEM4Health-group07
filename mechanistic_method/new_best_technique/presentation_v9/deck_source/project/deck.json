@@ -1,0 +1,72 @@
+{
+  "v": 5,
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-11-21T22:18:00Z"
+  },
+  "lists": "css",
+  "format": {
+    "v": 1,
+    "shared": [
+      "project/deck.css"
+    ]
+  },
+  "title": "Decoding the Bioreactor",
+  "cover": "cover",
+  "order": [
+    "cover",
+    "task",
+    "batch",
+    "noise",
+    "strategy",
+    "idea",
+    "clues",
+    "models",
+    "simulator",
+    "odemath",
+    "kernel",
+    "particle",
+    "sugarsim",
+    "pipeline",
+    "ladder",
+    "ablation",
+    "ablationtech",
+    "targets",
+    "why",
+    "trust",
+    "lessons"
+  ],
+  "sections": {
+    "problem": {
+      "description": "The task, what a batch looks like, and why measurement noise limits any model.",
+      "start": "cover"
+    },
+    "idea": {
+      "description": "The operators’ feed log leaks the hidden measurements: four clues.",
+      "start": "idea"
+    },
+    "models": {
+      "description": "A simulator, a pattern-matcher, a simulator with uncertainty and a day-by-day sugar simulator, each in technical detail, and how they are combined.",
+      "start": "models"
+    },
+    "results": {
+      "description": "Error step by step, what each decision bought, the final submission, how it was checked, and what we learned.",
+      "start": "ladder"
+    }
+  },
+  "faces": {
+    "space-grotesk": {
+      "family": "Space Grotesk",
+      "href": "https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap"
+    },
+    "inter": {
+      "family": "Inter",
+      "href": "https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap"
+    },
+    "jetbrains-mono": {
+      "family": "JetBrains Mono",
+      "href": "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap"
+    }
+  },
+  "designSystems": []
+}

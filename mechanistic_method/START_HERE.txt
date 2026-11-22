@@ -1,0 +1,16 @@
+BIOREACTOR RESULTS
+
+1. Extract the complete ZIP.
+2. Open README.md for setup commands for your computer.
+3. Install the packages in requirements.txt.
+4. Run: python run.py
+5. Open outputs/submission_best.csv.
+
+The default command uses the supplied saved predictions.
+To fit the original models again, run: python run.py --retrain
+Training can take a long time.
+
+For a notebook, open Run_Bioreactor.ipynb.
+
+Method: hybrid mechanistic and machine learning ensemble.
+The README includes research results, known limitations, and references.

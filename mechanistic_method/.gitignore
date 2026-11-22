@@ -1,0 +1,20 @@
+/runs/
+/outputs/
+
+# ODE model configs (source) stay; simulation outputs ignored
+/lab/ode/*.npy
+*.npy
+*.npz
+*.html
+
+# Keep only the 3 key OOF results, ignore the rest
+/lab/oof/*
+!/lab/oof/b09_hyb_stat_bayesresid_smoothcells.npz
+!/lab/oof/b10_nosearch_bayesresid_smoothcells.npz
+!/lab/oof/b11_mechanistic_only_bayesresid.npz
+
+.DS_Store
+
+/submission*.csv
+/outputs/
+/runs/
