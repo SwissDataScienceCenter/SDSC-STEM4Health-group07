@@ -71,3 +71,5 @@ mechanistic_method/lab/oof/*.npz
 # Experiment result logs (generated)
 mechanistic_method/lab/results.jsonl
 mechanistic_method/lab/results_partition2.jsonl
+#output files
+*.csv
